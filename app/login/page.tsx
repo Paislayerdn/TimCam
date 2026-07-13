@@ -15,13 +15,13 @@ export default function Home() {
   const [error, setError] = useState("");
 
   function login() {
-      setError("");
+    setError("");
 
-      if (authenticate(username, password)) {
-          router.push("/dashboard");
-      } else {
-          setError("User not authenticated. Check Admin.");
-      }
+    if (authenticate(username, password)) {
+        router.push("/dashboard");
+    } else {
+        setError("User not authenticated. Check Admin.");
+    }
   }
 
   return (
