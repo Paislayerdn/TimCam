@@ -1,5 +1,9 @@
 "use client";
 
+import "@/styles/login.css";
+import { authenticate } from "@/lib/auth";
+
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -10,89 +14,47 @@ export default function Home() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  // ===========================
-  // CHANGE THESE LATER
-  // ===========================
-  const ADMIN_USERNAME = "wongsathon";
-  const ADMIN_PASSWORD = "youwouldntknowthispassword";
-  // ===========================
-
   function login() {
-    if (
-      username.toLowerCase() === ADMIN_USERNAME &&
-      password === ADMIN_PASSWORD
-    ) {
-      router.push("/rainbow");
-    } else {
-      setError("User not authenticated. Check Admin.");
-    }
+      setError("");
+
+      if (authenticate(username, password)) {
+          router.push("/dashboard");
+      } else {
+          setError("User not authenticated. Check Admin.");
+      }
   }
 
   return (
-    <main
-      style={{
-        height: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        background: "#111",
-      }}
-    >
-      <div
-        style={{
-          background: "#222",
-          padding: "40px",
-          borderRadius: "12px",
-          width: "350px",
-        }}
-      >
-        <h1 style={{ color: "white", textAlign: "center" }}>
-          TimCam
+    <main className="login-page">
+      <div className="login-box">
+        <h1 className="title">
+            TimCam
         </h1>
 
         <input
-          placeholder="Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          style={{
-            width: "100%",
-            padding: "10px",
-            marginTop: "20px",
-          }}
+            className="login-input"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
         />
 
         <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          style={{
-            width: "100%",
-            padding: "10px",
-            marginTop: "10px",
-          }}
+            className="login-input"
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
         />
 
         <button
-          onClick={login}
-          style={{
-            width: "100%",
-            marginTop: "20px",
-            padding: "10px",
-            cursor: "pointer",
-          }}
+            className="login-button"
+            onClick={login}
         >
-          Login
+            Login
         </button>
 
-        <p
-          style={{
-            color: "red",
-            textAlign: "center",
-            marginTop: "15px",
-          }}
-        >
-          {error}
+        <p className="error-message">
+            {error}
         </p>
       </div>
     </main>
