@@ -1,3 +1,5 @@
-return (
-    <h1>Members</h1>
-)
+export default function MembersPage() {
+    return (
+        <h1>Members</h1>
+    );
+}

@@ -4,6 +4,6 @@ export function authenticate(
 ) {
     return (
         username === "wongsathon" &&
-        password === "youwouldntknowthispassword"
+        password === "password"
     );
 }
