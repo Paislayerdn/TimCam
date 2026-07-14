@@ -89,8 +89,15 @@ export default function MembersPage() {
         });
 
 
-        const newMember = await response.json();
+        if (!response.ok) {
+            console.error(
+                await response.text()
+            );
+            return;
+        }
 
+
+        const newMember = await response.json();
 
         setMembers((previous) => [
             ...previous,

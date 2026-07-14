@@ -1,101 +1,162 @@
 import { NextResponse } from "next/server";
-import db from "@/lib/db";
+import { supabase } from "@/lib/supabase";
+
 
 
 export async function GET() {
 
-    const members = db
-        .prepare(`
-            SELECT
-                members.id,
-                members.name,
-                groups.name AS "group"
-            FROM members
-            JOIN groups
-            ON members.group_id = groups.id
+    const { data, error } = await supabase
+        .from("members")
+        .select(`
+            id,
+            name,
+            groups (
+                name
+            )
         `)
-        .all();
+        .order("id");
+
+
+    if (error) {
+        return NextResponse.json(
+            {
+                error: error.message
+            },
+            {
+                status: 500
+            }
+        );
+    }
+
+
+    const members = data.map((member: any) => ({
+        id: member.id,
+        name: member.name,
+        group: member.groups?.name ?? member.groups?.[0]?.name ?? "Unknown"
+    }));
 
 
     return NextResponse.json(members);
 }
 
 
+
+
+
 export async function POST(request: Request) {
 
     const body = await request.json();
 
-    const name = body.name;
-    const group_id = body.group_id;
+
+    const { data, error } = await supabase
+        .from("members")
+        .insert({
+            name: body.name,
+            group_id: body.group_id
+        })
+        .select()
+        .single();
 
 
-    if (!name || !group_id) {
+
+    if (error) {
+
         return NextResponse.json(
             {
-                error: "Missing data"
+                error: error.message
             },
             {
-                status: 400
+                status: 500
             }
         );
+
     }
 
 
-    const result = db
-        .prepare(`
-            INSERT INTO members
-            (name, group_id)
-            VALUES (?, ?)
-        `)
-        .run(
+
+    const { data: memberWithGroup, error: fetchError } = await supabase
+        .from("members")
+        .select(`
+            id,
             name,
-            group_id
-        );
-
-
-    const member = db
-        .prepare(`
-            SELECT
-                members.id,
-                members.name,
-                groups.name AS "group"
-            FROM members
-            JOIN groups
-            ON members.group_id = groups.id
-            WHERE members.id = ?
+            groups (
+                name
+            )
         `)
-        .get(Number(result.lastInsertRowid));
+        .eq("id", data.id)
+        .single();
 
 
-    return NextResponse.json(member);
-}
 
-export async function DELETE(request: Request) {
-    const body = await request.json();
+    if (fetchError) {
 
-    const id = body.id;
-
-
-    if (!id) {
         return NextResponse.json(
             {
-                error: "Missing id"
+                error: fetchError.message
             },
             {
-                status: 400
+                status:500
             }
         );
+
     }
 
 
-    db.prepare(`
-        DELETE FROM members
-        WHERE id = ?
-    `)
-    .run(id);
+
+    const result = memberWithGroup as any;
 
 
     return NextResponse.json({
-        success: true
+
+        id: result.id,
+
+        name: result.name,
+
+        group:
+            result.groups?.name ??
+            result.groups?.[0]?.name ??
+            "Unknown"
+
     });
+
+}
+
+
+
+
+
+export async function DELETE(request: Request) {
+
+    const body = await request.json();
+
+
+    const { error } = await supabase
+        .from("members")
+        .delete()
+        .eq(
+            "id",
+            body.id
+        );
+
+
+
+    if (error) {
+
+        return NextResponse.json(
+            {
+                error:error.message
+            },
+            {
+                status:500
+            }
+        );
+
+    }
+
+
+
+    return NextResponse.json({
+        success:true
+    });
+
 }

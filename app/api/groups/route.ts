@@ -1,14 +1,26 @@
 import { NextResponse } from "next/server";
-import db from "@/lib/db";
+import { supabase } from "@/lib/supabase";
+
 
 export async function GET() {
-    const groups = db
-        .prepare(`
-            SELECT id, name
-            FROM groups
-            ORDER BY id
-        `)
-        .all();
 
-    return NextResponse.json(groups);
+    const { data, error } = await supabase
+        .from("groups")
+        .select("*")
+        .order("id");
+
+
+    if (error) {
+        return NextResponse.json(
+            {
+                error: error.message
+            },
+            {
+                status: 500
+            }
+        );
+    }
+
+
+    return NextResponse.json(data);
 }
