@@ -1,0 +1,57 @@
+.navbar {
+
+    height: 60px;
+
+    background: #222;
+
+    color: white;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 0 25px;
+
+}
+
+.navbar-title {
+
+    font-size: 24px;
+
+    font-weight: bold;
+
+}
+
+.navbar-links {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 20px;
+
+}
+
+.navbar-links a {
+
+    color: white;
+
+    text-decoration: none;
+
+}
+
+.navbar-links a:hover {
+
+    text-decoration: underline;
+
+}
+
+.logout-button {
+
+    padding: 8px 14px;
+
+    cursor: pointer;
+
+}

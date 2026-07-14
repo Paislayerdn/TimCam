@@ -1,25 +1,32 @@
 "use client";
 
 import Cookies from "js-cookie";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 import "@/styles/login.css";
 import { authenticate } from "@/lib/auth";
 
 export default function Home() {
-  const router = useRouter();
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+    const router = useRouter();
+
+    useEffect(() => {
+        if (Cookies.get("authenticated") === "true") {
+            router.replace("/calendar");
+        }
+    }, [router]);
+
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
   
   function login() {
     setError("");
 
     if (authenticate(username, password)) {
         Cookies.set("authenticated", "true");
-        router.push("/dashboard");
+        router.replace("/calendar");
     } else {
         setError("User not authenticated. Check Admin.");
     }

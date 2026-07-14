@@ -1,13 +1,15 @@
-"use client";
+export default function StatisticsPage() {
 
-import "@/styles/dashboard.css";
-
-export default function MembersPage() {
     return (
+
         <main className="dashboard-page">
+
             <h1 className="rainbow-text">
-                members
+                It worked lmao
             </h1>
+
         </main>
+
     );
+
 }
