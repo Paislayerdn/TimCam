@@ -3,6 +3,7 @@ import db from "@/lib/db";
 
 
 export async function GET() {
+
     const members = db
         .prepare(`
             SELECT
@@ -15,11 +16,13 @@ export async function GET() {
         `)
         .all();
 
+
     return NextResponse.json(members);
 }
 
 
 export async function POST(request: Request) {
+
     const body = await request.json();
 
     const name = body.name;
@@ -28,8 +31,12 @@ export async function POST(request: Request) {
 
     if (!name || !group_id) {
         return NextResponse.json(
-            { error: "Missing data" },
-            { status: 400 }
+            {
+                error: "Missing data"
+            },
+            {
+                status: 400
+            }
         );
     }
 
@@ -46,7 +53,7 @@ export async function POST(request: Request) {
         );
 
 
-    const insertedMember = db
+    const member = db
         .prepare(`
             SELECT
                 members.id,
@@ -60,13 +67,25 @@ export async function POST(request: Request) {
         .get(Number(result.lastInsertRowid));
 
 
-    return NextResponse.json(insertedMember);
+    return NextResponse.json(member);
 }
 
 export async function DELETE(request: Request) {
     const body = await request.json();
 
     const id = body.id;
+
+
+    if (!id) {
+        return NextResponse.json(
+            {
+                error: "Missing id"
+            },
+            {
+                status: 400
+            }
+        );
+    }
 
 
     db.prepare(`
@@ -79,43 +98,4 @@ export async function DELETE(request: Request) {
     return NextResponse.json({
         success: true
     });
-}
-
-export async function PUT(request: Request) {
-    const body = await request.json();
-
-    const id = body.id;
-    const name = body.name;
-    const group_id = body.group_id;
-
-
-    db.prepare(`
-        UPDATE members
-        SET
-            name = ?,
-            group_id = ?
-        WHERE id = ?
-    `)
-    .run(
-        name,
-        group_id,
-        id
-    );
-
-
-    const updatedMember = db
-        .prepare(`
-            SELECT
-                members.id,
-                members.name,
-                groups.name AS "group"
-            FROM members
-            JOIN groups
-            ON members.group_id = groups.id
-            WHERE members.id = ?
-        `)
-        .get(id);
-
-
-    return NextResponse.json(updatedMember);
 }

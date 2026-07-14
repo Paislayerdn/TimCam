@@ -1,26 +1,59 @@
 .members-page {
-    max-width: 900px;
+    max-width: 1100px;
     margin: 0 auto;
     padding: 24px;
 }
 
+
+/* Page title */
+
 .members-page h1 {
-    margin-bottom: 24px;
+    text-align: center;
+    margin-bottom: 32px;
 }
 
+.members-title {
+
+    font-size: 40px;
+
+    font-weight: bold;
+
+}
+
+/* Main two-column layout */
+
+.members-container {
+    display: flex;
+    gap: 40px;
+}
+
+
+/* Left side */
+
 .member-form {
+    flex: 1;
+
     display: flex;
     flex-direction: column;
     gap: 12px;
 
-    max-width: 400px;
-
-    margin-bottom: 40px;
+    max-width: 350px;
 }
+
+
+/* Right side */
+
+.member-list {
+    flex: 2;
+}
+
+
+/* Inputs */
 
 .member-form input,
 .member-form select {
     padding: 10px;
+
     font-size: 16px;
 
     border: 1px solid #888;
@@ -29,32 +62,70 @@
     background: white;
 }
 
+
 .member-form input:focus,
 .member-form select:focus {
     outline: none;
+
     border-color: royalblue;
 }
 
-.member-form button {
-    margin-top: 8px;
 
-    padding: 10px;
+/* Buttons */
+
+.member-form button,
+.member-actions button {
+    padding: 10px 16px;
+
+    border: 1px solid #888;
+    border-radius: 6px;
+
+    background: white;
 
     cursor: pointer;
+
+    font-size: 15px;
 }
+
+
+.member-form button:hover,
+.member-actions button:hover {
+    background: #f0f0f0;
+}
+
+
+.member-form button:active,
+.member-actions button:active {
+    transform: translateY(1px);
+}
+
+/* Table */
 
 .member-list table {
     width: 100%;
+
     border-collapse: collapse;
 }
+
 
 .member-list th,
 .member-list td {
     padding: 12px;
+
     border-bottom: 1px solid #ddd;
+
     text-align: left;
 }
 
+
 .member-list th {
     font-weight: bold;
+}
+
+
+/* Action buttons */
+
+.member-actions {
+    display: flex;
+    gap: 8px;
 }
