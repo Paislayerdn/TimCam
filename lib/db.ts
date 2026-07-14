@@ -1,5 +1,15 @@
 import { DatabaseSync } from "node:sqlite";
+import path from "path";
 
-const db = new DatabaseSync("database/timcam.db");
+
+const dbPath = path.join(
+    process.cwd(),
+    "database",
+    "timcam.db"
+);
+
+
+const db = new DatabaseSync(dbPath);
+
 
 export default db;
